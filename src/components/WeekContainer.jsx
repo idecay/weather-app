@@ -35,9 +35,12 @@ export default class WeekContainer extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Welcome to the Weather App</h1>
-        {this.formatDayTiles()}
+      <div className="container">
+        <h1 className="display-1 jumbotron">Your 5-day Forcast</h1>
+        <h5 className="display-5 text-muted">Lilburn, GA</h5>
+        <div className="row justify-content-center">
+          {this.formatDayTiles()}
+        </div>
       </div>
     );
   }
