@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import apiConfig from "../apiKeys";
+import DayTile from "./DayTile";
 
 export default class WeekContainer extends Component {
   state = {
@@ -26,10 +27,17 @@ export default class WeekContainer extends Component {
       });
   };
 
+  formatDayTiles = () => {
+    return this.state.dailyData.map((reading, index) => (
+      <DayTile reading={reading} key={index} />
+    ));
+  };
+
   render() {
     return (
       <div>
         <h1>Welcome to the Weather App</h1>
+        {this.formatDayTiles()}
       </div>
     );
   }
