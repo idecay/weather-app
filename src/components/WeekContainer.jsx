@@ -6,10 +6,14 @@ export default class WeekContainer extends Component {
   state = {
     fullData: [],
     dailyData: [],
+    locationData: [],
+    zip: "90210",
   };
 
   componentDidMount = () => {
-    const weatherURL = `http://api.openweathermap.org/data/2.5/forecast?zip=30047&units=imperial&APPID=${apiConfig.openWeatherKey}`;
+    const weatherURL = `http://api.openweathermap.org/data/2.5/forecast?zip=${this.state.zip}&units=imperial&APPID=${apiConfig.openWeatherKey}`;
+
+    const zipURL = `https://www.zipcodeapi.com/rest/${apiConfig.zipCodeKey}/info.json/${this.state.zip}/degrees`;
 
     fetch(weatherURL)
       .then((res) => res.json())
@@ -25,6 +29,12 @@ export default class WeekContainer extends Component {
           () => console.log(this.state)
         );
       });
+
+    fetch(zipURL)
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ locationData: data }, () => console.log(this.state));
+      });
   };
 
   formatDayTiles = () => {
@@ -33,11 +43,37 @@ export default class WeekContainer extends Component {
     ));
   };
 
+  onChange = (event) => {
+    const value = event.target.value;
+    const name = event.target.name;
+    const newState = { ...this.state };
+    newState[name] = value;
+    this.setState(newState);
+  };
+
+  onSubmit = (event) => {
+    event.preventDefault();
+
+    this.componentDidMount();
+  };
+
   render() {
     return (
       <div className="container">
         <h1 className="display-1 jumbotron">Your 5-day Forcast</h1>
-        <h5 className="display-5 text-muted">Lilburn, GA</h5>
+        <form onSubmit={this.onSubmit}>
+          <input
+            type="text"
+            name="zip"
+            placeholder="Enter zip code..."
+            value={this.state.zip}
+            onChange={this.onChange}
+          />
+        </form>
+        <h5 className="display-5 text-muted">
+          {this.state.locationData.city}, {this.state.locationData.state}
+        </h5>
+
         <div className="row justify-content-center">
           {this.formatDayTiles()}
         </div>
